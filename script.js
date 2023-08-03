@@ -2,25 +2,12 @@
 <html>
 <head>
   <title>Wordle Game</title>
-  <style>
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      background-color: #f0f0f0;
-    }
-    canvas {
-      border: 1px solid #000;
-    }
-  </style>
 </head>
 <body>
   <script>
     // Word bank containing the five-letter words, prepositions, pronouns, and new words
     const words = [
-           "above", "acute", "alive", "alone", "angry", "aware", "awful", "basic", "black", "blind",
+      "above", "acute", "alive", "alone", "angry", "aware", "awful", "basic", "black", "blind",
       "brave", "brief", "broad", "brown", "cheap", "chief", "civil", "clean", "clear", "close",
       "crazy", "daily", "dirty", "early", "empty", "equal", "exact", "extra", "faint", "false",
       "fifth", "final", "first", "fresh", "front", "funny", "giant", "grand", "great", "green",
@@ -145,13 +132,11 @@
     }
   </script>
 
-  <div style="text-align: center;">
-    <h1>Wordle Game</h1>
-    <canvas id="gameCanvas" width="200" height="50"></canvas>
-    <p>Guess the five-letter word:</p>
-    <input type="text" id="guessInput" onkeypress="handleKeyPress(event)">
-    <button onclick="checkGuess()">Guess</button>
-    <p id="feedback"></p>
-  </div>
+  <h1>Wordle Game</h1>
+  <canvas id="gameCanvas" width="200" height="50"></canvas>
+  <p>Guess the five-letter word:</p>
+  <input type="text" id="guessInput" onkeypress="handleKeyPress(event)">
+  <button onclick="checkGuess()">Guess</button>
+  <p id="feedback"></p>
 </body>
 </html>
