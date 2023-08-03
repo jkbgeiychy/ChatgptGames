@@ -1,37 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Your Game</title>
-    <style>
-        body {
-            margin: 0;
-            overflow: hidden;
-        }
-
-        /* Make the embedded element fill the entire screen */
-        canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-        }
-    </style>
-</head>
-<body>
-
-<script>
-    window.onload = function() {
-        // Replace the code below with your JavaScript game code
-        // Example: (This is just a simple example, replace it with your game code)
-        <!DOCTYPE html>
-<html>
-<head>
   <title>Wordle Game</title>
 </head>
-<body>
+<body style="display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background-color: #f0f0f0;">
   <script>
     // Word bank containing the five-letter words, prepositions, pronouns, and new words
     const words = [
-      "above", "acute", "alive", "alone", "angry", "aware", "awful", "basic", "black", "blind",
+       "above", "acute", "alive", "alone", "angry", "aware", "awful", "basic", "black", "blind",
       "brave", "brief", "broad", "brown", "cheap", "chief", "civil", "clean", "clear", "close",
       "crazy", "daily", "dirty", "early", "empty", "equal", "exact", "extra", "faint", "false",
       "fifth", "final", "first", "fresh", "front", "funny", "giant", "grand", "great", "green",
@@ -156,17 +132,13 @@
     }
   </script>
 
-  <h1>Wordle Game</h1>
-  <canvas id="gameCanvas" width="200" height="50"></canvas>
-  <p>Guess the five-letter word:</p>
-  <input type="text" id="guessInput" onkeypress="handleKeyPress(event)">
-  <button onclick="checkGuess()">Guess</button>
-  <p id="feedback"></p>
-</body>
-</html>
-
-    };
-</script>
-
+  <div style="text-align: center;">
+    <h1>Wordle Game</h1>
+    <canvas id="gameCanvas" width="200" height="50"></canvas>
+    <p>Guess the five-letter word:</p>
+    <input type="text" id="guessInput" onkeypress="handleKeyPress(event)">
+    <button onclick="checkGuess()">Guess</button>
+    <p id="feedback"></p>
+  </div>
 </body>
 </html>
