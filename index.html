@@ -9,19 +9,20 @@
         }
 
         /* Make the embedded element fill the entire screen */
-        iframe {
+        canvas {
             position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
         }
     </style>
 </head>
 <body>
 
-<!-- Replace "YOUR_GAME_PATH_OR_URL_HERE" with the path or URL to your game's HTML file -->
-<iframe src="<!DOCTYPE html>
+<script>
+    window.onload = function() {
+        // Replace the code below with your JavaScript game code
+        // Example: (This is just a simple example, replace it with your game code)
+        <!DOCTYPE html>
 <html>
 <head>
   <title>Wordle Game</title>
@@ -163,7 +164,9 @@
   <p id="feedback"></p>
 </body>
 </html>
-" frameborder="0" allowfullscreen></iframe>
+
+    };
+</script>
 
 </body>
 </html>
