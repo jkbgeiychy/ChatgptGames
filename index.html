@@ -1,19 +1,295 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Wordle Game</title>
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-  <div id="game-container">
-    <h1>Wordle Game</h1>
-    <canvas id="gameCanvas" width="200" height="50"></canvas>
-    <p>Guess the five-letter word:</p>
-    <input type="text" id="guessInput">
-    <button onclick="checkGuess()">Guess</button>
-    <p id="feedback"></p>
-  </div>
 
-  <script src="script.js"></script>
-</body>
+  <head>
+    <title>Wordle Game</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+      }
+
+      h1 {
+        font-size: 30px;
+        margin: 20px 0;
+      }
+
+      #gameContainer {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+      }
+
+      #gameCanvas {
+        border: 2px solid black;
+        margin-right: 20px;
+      }
+
+      #guessContainer {
+        display: flex;
+        flex-direction: column;
+      }
+
+      #guessInput {
+        font-size: 24px;
+        padding: 5px 10px;
+        margin-bottom: 10px;
+      }
+
+      #guessButton {
+        font-size: 24px;
+        padding: 5px 10px;
+      }
+
+      #feedback {
+        font-size: 24px;
+        margin-bottom: 20px;
+      }
+
+      #letterBank {
+        font-size: 20px;
+        text-align: left;
+        margin-top: 20px;
+      }
+
+      .letterBox {
+        width: 30px;
+        height: 30px;
+        margin: 2px;
+        display: inline-block;
+        border: 1px solid black;
+        text-align: center;
+        line-height: 30px;
+        font-size: 18px;
+      }
+
+      .greenLetter {
+        background-color: green;
+        color: white;
+      }
+
+      .yellowLetter {
+        background-color: yellow;
+      }
+
+      .grayLetter {
+        background-color: gray;
+        color: white;
+      }
+
+    </style>
+  </head>
+
+  <body>
+    <h1>Wordle Game</h1>
+    <div id="gameContainer">
+      <canvas id="gameCanvas" width="250" height="50"></canvas>
+      <div id="guessContainer">
+        <input type="text" id="guessInput" placeholder="Enter your guess" onkeypress="handleKeyPress(event)">
+        <button id="guessButton" onclick="checkGuess()">Guess</button>
+        <p id="feedback"></p>
+        <p>Streak: <span id="streak">0</span></p>
+      </div>
+      <div id="letterBank"></div>
+    </div>
+
+    <div id="previousGuesses">
+      <h2>Previous Guesses:</h2>
+    </div>
+
+    <script>
+      // Word bank containing common five-letter words
+      const words = [
+        // Insert common word list here
+        "Above", "Acute", "Alive", "Alone", "Angry", "Aware", "Awful", "Basic", "Black", "Blind", "Brave", "Brief", "Broad",
+        "Brown", "Cheap", "Chief", "Civil", "Clean", "Clear", "Close", "Crazy", "Daily", "Dirty", "Early", "Empty", "Equal",
+        "Exact", "Extra", "Faint", "False", "Fifth", "Final", "First", "Fresh", "Front", "Funny", "Giant", "Grand", "Great",
+        "Green", "Gross", "Happy", "Harsh", "Heavy", "Human", "Ideal", "Inner", "Joint", "Large", "Legal", "Level", "Light",
+        "Local", "Loose", "Lucky", "Magic", "Major", "Minor", "Moral", "Naked", "Nasty", "Naval", "Other", "Outer", "Plain",
+        "Prime", "Prior", "Proud", "Quick", "Quiet", "Rapid", "Ready", "Right", "Roman", "Rough", "Round", "Royal", "Rural",
+        "Sharp", "Sheer", "Short", "Silly", "Sixth", "Small", "Smart", "Solid", "Sorry", "Spare", "Steep", "Still", "Super",
+        "Sweet", "Thick", "Third", "Tight", "Total", "Tough", "Upper", "Upset", "Urban", "Usual", "Vague", "Valid", "Vital",
+        "White", "Whole", "Wrong", "Young", "Abuse", "Adult", "Agent", "Anger", "Apple", "Award", "Basis", "Beach", "Birth",
+        "Block", "Blood", "Board", "Brain", "Bread", "Break", "Brown", "Buyer", "Cause", "Chain", "Chair", "Chest", "Chief",
+        "Child", "China", "Claim", "Class", "Clock", "Coach", "Coast", "Court", "Cover", "Cream", "Crime", "Cross", "Crowd",
+        "Crown", "Cycle", "Dance", "Death", "Depth", "Doubt", "Draft", "Drama", "Dream", "Dress", "Drink", "Drive", "Earth",
+        "Enemy", "Entry", "Error", "Event", "Faith", "Fault", "Field", "Fight", "Final", "Floor", "Focus", "Force", "Frame",
+        "Frank", "Front", "Fruit", "Glass", "Grant", "Grass", "Green", "Group", "Guide", "Heart", "Henry", "Horse", "Hotel",
+        "House", "Image", "Index", "Input", "Issue", "Japan", "Jones", "Judge", "Knife", "Laura", "Layer", "Level", "Lewis",
+        "Light", "Limit", "Lunch", "Major", "March", "Match", "Metal", "Model", "Money", "Month", "Motor", "Mouth", "Music",
+        "Night", "Noise", "North", "Novel", "Nurse", "Offer", "Order", "Other", "Owner", "Panel", "Paper", "Party", "Peace",
+        "Peter", "Phase", "Phone", "Piece", "Pilot", "Pitch", "Place", "Plane", "Plant", "Plate", "Point", "Pound", "Power",
+        "Press", "Price", "Pride", "Prize", "Proof", "Queen", "Radio", "Range", "Ratio", "Reply", "Right", "River", "Round",
+        "Route", "Rugby", "Scale", "Scene", "Scope", "Score", "Sense", "Shape", "Share", "Sheep", "Sheet", "Shift", "Shirt",
+        "Shock", "Sight", "Simon", "Skill", "Sleep", "Smile", "Smith", "Smoke", "Sound", "South", "Space", "Speed", "Spite",
+        "Sport", "Squad", "Staff", "Stage", "Start", "State", "Steam", "Steel", "Stock", "Stone", "Store", "Study", "Stuff",
+        "Style", "Sugar", "Table", "Taste", "Terry", "Theme", "Thing", "Title", "Total", "Touch", "Tower", "Track", "Trade",
+        "Train", "Trend", "Trial", "Trust", "Truth", "Uncle", "Union", "Unity", "Value", "Video", "Visit", "Voice", "Waste",
+        "Watch", "Water", "While", "White", "Whole", "Woman", "World", "Youth", "One’s", "There", "Where", "Which", "Whose",
+        "Whoso", "Yours", "Yours", "Aback", "Abaft", "Aboon", "About", "Above", "Accel", "Adown", "Afoot", "Afore", "Afoul",
+        "After", "Again", "Agape", "Agogo", "Agone", "Ahead", "Ahull", "Alife", "Alike", "Aloft", "Alone", "Along", "Aloof",
+        "Aloud", "Amiss", "Amply", "Apace", "Apart", "Aptly", "Arear", "Aside", "Askew", "Awful", "Badly", "Bally", "Below",
+        "Canny", "Cheap", "Clean", "Clear", "Coyly", "Daily", "Dimly", "Dirty", "Ditto", "Dryly", "Dully", "Early", "Extra",
+        "False", "Fatly", "Feyly", "First", "Fitly", "Forte", "Forth", "Fresh", "Fully", "Funny", "Gaily", "Gayly", "Godly",
+        "Great", "Haply", "Heavy", "Hella", "Hence", "Hotly", "Icily", "Infra", "Intl.", "Jildi", "Jolly", "Laxly", "Lento",
+        "Light", "Lowly", "Madly", "Maybe", "Never", "Newly", "Nobly", "Oddly", "Often", "Other", "Ought", "Party", "Piano",
+        "Plain", "Plonk", "Plumb", "Prior", "Queer", "Quick", "Quite", "Ramen", "Rapid", "Redly", "Right", "Rough", "Round",
+        "Sadly", "Secus", "Selly", "Sharp", "Sheer", "Shily", "Short", "Shyly", "Silly", "Since", "Sleek", "Slyly", "Small",
+        "So-So", "Sound", "Spang", "Stark", "Still", "Stone", "Stour", "Super", "Tally", "Tanto", "There", "Thick", "Tight",
+        "Today", "Tomoz", "Truly", "Twice", "Under", "Utter", "Verry", "Wanly", "Wetly", "Where", "Wrong", "Wryly", "Aargh",
+        "Adios", "Alack", "Aloha", "Basta", "Begad", "Bless", "Bravo", "Damme", "Frick", "Golly", "Gratz", "Hallo", "Havoc",
+        "Hella", "Howay", "Howdy", "Hullo", "Huzza", "Jesus", "Kapow", "Loose", "Lordy", "Marry", "Plonk", "Skoal", "Sniff",
+        "Sooey", "Thiam", "Thwap", "Viola", "Vivat", "Wacko", "Wahey", "Wilma", "Wirra", "Woops", "Wowie", "Yecch", "Yeeha",
+        "Yeesh", "Yowch", "Zowie"
+      ];
+
+      // Function to generate a random five-letter word for the game
+      function generateSecretWord() {
+        const randomIndex = Math.floor(Math.random() * words.length);
+        return words[randomIndex];
+      }
+
+      // Define the initial secret word and initialize attempts, streak, and previousGuesses array
+      let secretWord = generateSecretWord();
+      let attempts = 0;
+      let streak = 0;
+      const maxAttempts = 6;
+      const previousGuesses = [];
+
+      // Function to check the player's guess and provide feedback
+      function checkGuess() {
+        if (attempts >= maxAttempts) {
+          alert("Oops! You lose! The secret word was: " + secretWord);
+          streak = -Math.abs(streak + 1);
+          resetGame();
+          return;
+        }
+
+        const guess = document.getElementById("guessInput").value.toLowerCase();
+
+        if (guess.length !== 5) {
+          alert("Please enter a five-letter word.");
+          return;
+        }
+
+        if (!words.includes(guess)) {
+          alert("Please enter a word from the word bank.");
+          return;
+        }
+
+        let feedback = "";
+
+        for (let i = 0; i < 5; i++) {
+          if (guess[i] === secretWord[i]) {
+            feedback += "<div class='letterBox greenLetter'>" + guess[i] + "</div>";
+          } else if (secretWord.includes(guess[i])) {
+            feedback += "<div class='letterBox yellowLetter'>" + guess[i] + "</div>";
+          } else {
+            feedback += "<div class='letterBox grayLetter'></div>";
+          }
+        }
+
+        // Store the current guess and feedback in previousGuesses array
+        previousGuesses.push({
+          guess,
+          feedback,
+          attemptNumber: attempts + 1
+        });
+
+        document.getElementById("feedback").innerHTML = feedback;
+
+        // Clear the canvas
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Draw colored boxes for each letter of the last guessed word
+        const boxWidth = 30;
+        const boxHeight = 30;
+        const startX = 10;
+        const startY = 10;
+
+        for (let i = 0; i < guess.length; i++) {
+          const letter = guess[i];
+          const color = secretWord.includes(letter) ? "yellow" : "gray";
+          ctx.fillStyle = color;
+          ctx.fillRect(startX + i * (boxWidth + 5), startY, boxWidth, boxHeight);
+
+          ctx.fillStyle = "black";
+          ctx.font = "20px Arial";
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillText(letter, startX + i * (boxWidth + 5) + boxWidth / 2, startY + boxHeight / 2);
+        }
+
+        if (guess === secretWord) {
+          alert("Congratulations! You guessed the word!");
+          streak++;
+          resetGame();
+        } else {
+          attempts++;
+        }
+
+        // Update streak display
+        document.getElementById("streak").innerText = streak;
+
+        // Display previous guesses
+        displayPreviousGuesses();
+      }
+
+      // Function to handle Enter key press
+      function handleKeyPress(event) {
+        if (event.key === "Enter") {
+          checkGuess();
+        }
+      }
+
+      // Function to display the letter bank
+      function displayLetterBank() {
+        const letterBank = document.getElementById("letterBank");
+        letterBank.innerHTML = "";
+
+        const alphabet = "abcdefghijklmnopqrstuvwxyz";
+        for (let i = 0; i < alphabet.length; i++) {
+          const letter = alphabet[i];
+          letterBank.innerHTML += `<div class="letterBox">${letter}</div>`;
+        }
+      }
+
+      // Display the previous guesses
+      function displayPreviousGuesses() {
+        const previousGuessesDiv = document.getElementById("previousGuesses");
+        previousGuessesDiv.innerHTML = "";
+
+        previousGuesses.forEach((guessData) => {
+          const guessDisplay = document.createElement("p");
+          guessDisplay.innerHTML = `Attempt ${guessData.attemptNumber}: ${guessData.guess} - ${guessData.feedback}`;
+          guessDisplay.classList.add("guessDisplay");
+          previousGuessesDiv.appendChild(guessDisplay);
+        });
+      }
+
+      // Function to reset the game
+      function resetGame() {
+        secretWord = generateSecretWord();
+        attempts = 0;
+        previousGuesses.length = 0; // Clear the previous guesses array
+        document.getElementById("guessInput").value = "";
+        document.getElementById("feedback").innerHTML = "";
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Redraw the letter bank
+        displayLetterBank();
+      }
+
+      // Initial display of letter bank and previous guesses
+      displayLetterBank();
+      displayPreviousGuesses();
+
+    </script>
+  </body>
+
 </html>
