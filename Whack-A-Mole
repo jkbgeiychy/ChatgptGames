@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Whack-a-Mole Game</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        background-color: #f2f2f2;
+        margin: 0;
+        padding: 0;
+    }
+    .container {
+        max-width: 400px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    h1, p {
+        color: #333;
+    }
+    #score {
+        font-size: 24px;
+        font-weight: bold;
+        color: #007bff;
+    }
+    .hole {
+        width: 100px;
+        height: 100px;
+        background-color: #6B4226;
+        border-radius: 50%;
+        position: relative;
+        margin: 10px;
+        cursor: pointer;
+    }
+    .mole {
+        width: 60px;
+        height: 60px;
+        background-color: #333;
+        border-radius: 50%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: none;
+    }
+</style>
+</head>
+<body>
+    <div class="container">
+        <h1>Whack-a-Mole Game</h1>
+        <p>Click on the moles to score points!</p>
+        <p>Score: <span id="score">0</span></p>
+
+        <div class="hole" onclick="whackMole(0)">
+            <div class="mole"></div>
+        </div>
+        <div class="hole" onclick="whackMole(1)">
+            <div class="mole"></div>
+        </div>
+        <div class="hole" onclick="whackMole(2)">
+            <div class="mole"></div>
+        </div>
+        <div class="hole" onclick="whackMole(3)">
+            <div class="mole"></div>
+        </div>
+        <div class="hole" onclick="whackMole(4)">
+            <div class="mole"></div>
+        </div>
+    </div>
+
+    <script>
+ let score = 0;
+
+        function whackMole(index) {
+            const mole = document.querySelectorAll('.mole')[index];
+            if (mole.style.display !== 'none') {
+                score++;
+                document.getElementById('score').textContent = score;
+                mole.style.display = 'none';
+            }
+        }
+
+        function getRandomTime(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function peep() {
+            const moles = document.querySelectorAll('.mole');
+            const moleIndex = Math.floor(Math.random() * moles.length);
+            const mole = moles[moleIndex];
+
+            mole.style.top = '20px';
+            mole.style.left = '20px';
+            mole.style.display = 'block';
+
+            const time = getRandomTime(500, 1500);
+            setTimeout(() => {
+                mole.style.display = 'none';
+                setTimeout(peep, getRandomTime(1000, 2000));
+            }, time);
+        }
+
+        peep();
+    </script>
+</body>
+</html>
