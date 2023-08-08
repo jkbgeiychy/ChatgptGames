@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Memory Matching Game (Expandable)</title>
+<style>
+    /* ... (Styles remain the same) */
+</style>
+</head>
+<body>
+    <div class="container">
+        <h1>Memory Matching Game (Expandable)</h1>
+        <p>Enter the size of the grid and click "Start Game":</p>
+
+        <label for="gridSize">Size:</label>
+        <input type="number" id="gridSize" min="2" max="10" value="4">
+        <button onclick="startGame()">Start Game</button>
+
+        <div id="cardGrid"></div>
+    </div>
+
+    <script>
+        let gridSize = 4;
+        let flippedCards = [];
+
+        function createCardGrid(size) {
+            const cardGrid = document.getElementById('cardGrid');
+            cardGrid.innerHTML = '';
+
+            for (let i = 1; i <= size * size; i++) {
+                const card = document.createElement('div');
+                card.classList.add('card');
+                card.textContent = i;
+                card.addEventListener('click', () => flipCard(card));
+                cardGrid.appendChild(card);
+            }
+        }
+
+        function startGame() {
+            gridSize = parseInt(document.getElementById('gridSize').value);
+            createCardGrid(gridSize);
+        }
+
+        function flipCard(card) {
+            if (flippedCards.length < 2 && !card.classList.contains('flipped')) {
+                card.classList.add('flipped');
+                flippedCards.push(card);
+
+                if (flippedCards.length === 2) {
+                    setTimeout(checkMatch, 500);
+                }
+            }
+        }
+
+        function checkMatch() {
+            if (flippedCards[0].textContent === flippedCards[1].textContent) {
+                flippedCards[0].classList.add('matched');
+                flippedCards[1].classList.add('matched');
+            } else {
+                flippedCards[0].classList.remove('flipped');
+                flippedCards[1].classList.remove('flipped');
+            }
+
+            flippedCards = [];
+        }
+    </script>
+</body>
+</html>
