@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rock, Paper, Scissors Game (Text)</title>
+<style>
+        body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        background-color: #f2f2f2;
+        margin: 0;
+        padding: 0;
+    }
+    .container {
+        max-width: 400px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    h1, p {
+        color: #333;
+    }
+    button {
+        background-color: #007bff;
+        color: #fff;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    img {
+        max-width: 100%;
+        height: auto;
+    }
+</style>
+</head>
+<body>
+    <div class="container">
+        <h1>Rock, Paper, Scissors Game (Text)</h1>
+        <p>Choose your weapon:</p>
+
+        <button onclick="play('R')">Rock</button>
+        <button onclick="play('P')">Paper</button>
+        <button onclick="play('S')">Scissors</button>
+        <p id="result"></p>
+        <img id="computerChoice" src="" alt="Computer's Choice">
+    </div>
+
+    <script>
+        function play(playerChoice) {
+            const choices = ['R', 'P', 'S'];
+            const computerChoice = choices[Math.floor(Math.random() * choices.length)];
+
+            document.getElementById('computerChoice').src = `images/${computerChoice}.png`;
+
+            if (playerChoice === computerChoice) {
+                document.getElementById('result').textContent = 'It\'s a tie!';
+            } else if (
+                (playerChoice === 'R' && computerChoice === 'S') ||
+                (playerChoice === 'P' && computerChoice === 'R') ||
+                (playerChoice === 'S' && computerChoice === 'P')
+            ) {
+                document.getElementById('result').textContent = 'You win!';
+            } else {
+                document.getElementById('result').textContent = 'Computer wins!';
+            }
+        }
+    </script>
+</body>
+</html>
