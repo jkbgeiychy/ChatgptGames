@@ -7,4 +7,4 @@ ALSO! This is much more difficult than regular wordle, there are no resets, and 
 
 link is https://jkbgeiychy.github.io/ChatgptWordle/
 
-you can also download this as an html and play it. Click the arrow next to "code" on the top left, at the bottom click download zip, extract, run index.html.
+you can also download this as an html and play it. Click the arrow next to "code" on the top left, at the bottom click download zip, extract, run index.html. If i find this on any website without permission, i will dmca. (note that i cant actually do that, as its ai generated and law states that it is illegal to claim ai creations. Also technically a product of openai, but im not using it for monitization so :\ not a real threat, but just ask.)
