@@ -7,4 +7,4 @@ ALSO! This is much more difficult than regular wordle, there are no resets, and 
 
 link is https://jkbgeiychy.github.io/ChatgptWordle/
 
-you can also download this as an html and play it.
+you can also download this as an html and play it. Click the arrow next to "code" on the top left, at the bottom click download zip, extract, run index.html.
